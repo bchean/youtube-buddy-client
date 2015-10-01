@@ -25,7 +25,9 @@ function pingServerIfVideoIsPlaying() {
 }
 
 function videoIsPlaying() {
-    return true;
+    var playPauseButton = document.querySelector('.ytp-chrome-controls .ytp-play-button');
+    var currentButtonAction = playPauseButton.getAttribute('aria-label');
+    return (currentButtonAction === 'Pause');
 }
 
 function pingServer() {
