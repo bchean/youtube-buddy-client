@@ -31,5 +31,16 @@ function videoIsPlaying() {
 }
 
 function pingServer() {
-    console.log(currentVideoId);
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() {
+        if (xmlHttp.readyState === 4 && xmlHttp.status === 200) {
+            console.log(xmlHttp.responseText);
+        }
+    }
+    xmlHttp.open('PUT', makeRestEndpoint(), true);
+    xmlHttp.send(null);
+}
+
+function makeRestEndpoint() {
+    return 'https://youtube-buddy.herokuapp.com/api/videos/' + currentVideoId;
 }

@@ -15,6 +15,7 @@
     },
     "permissions": [
         "activeTab",
-        "alarms"
+        "alarms",
+        "https://youtube-buddy.herokuapp.com/"
     ]
 }
