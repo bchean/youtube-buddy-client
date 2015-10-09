@@ -1,3 +1,14 @@
+var SERVER_URL = 'https://youtube-buddy.herokuapp.com';
+var BADGE_CLASS_NAME = 'ytb-badge';
+
+/**
+ * We create the badge immediately because, for better UX, the badge should
+ * always be visible.
+ */
+if (isVideoUrl(document.URL)) {
+    updateBadge_scrobbling();
+}
+
 setInterval(function() {
     var currentUrl = document.URL;
     /**
@@ -34,26 +45,74 @@ function getVideoIdFromUrl(currentUrl) {
 function pingServerIfVideoIsPlaying(currentVideoId) {
     if (videoIsPlaying()) {
         pingServer(currentVideoId);
+    } else {
+        updateBadge_paused();
     }
 }
 
 function videoIsPlaying() {
-    var playPauseButton = document.querySelector('.ytp-chrome-controls .ytp-play-button');
-    var currentButtonAction = playPauseButton.getAttribute('aria-label');
+    var currentButtonAction = $('.ytp-chrome-controls .ytp-play-button').attr('aria-label');
     return (currentButtonAction === 'Pause');
 }
 
 function pingServer(currentVideoId) {
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.onreadystatechange = function() {
-        if (xmlHttp.readyState === 4 && xmlHttp.status === 200) {
-            console.log(xmlHttp.responseText);
-        }
-    }
-    xmlHttp.open('PUT', makeRestEndpoint(currentVideoId), true);
-    xmlHttp.send(null);
+    $.ajax({
+        url: makeRestEndpoint(currentVideoId),
+        method: 'PUT'
+    }).done(function(data) {
+        console.log(JSON.stringify(data));
+        updateBadge_scrobbling();
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        console.error(errorThrown);
+        updateBadge_offline();
+    });
 }
 
 function makeRestEndpoint(currentVideoId) {
-    return 'https://youtube-buddy.herokuapp.com/api/videos/' + currentVideoId;
+    return SERVER_URL + '/api/videos/' + currentVideoId;
+}
+
+function updateBadge_paused() {
+    var badge = createBadgeIfNecessaryAndGet();
+    badge.text('YTB | Paused');
+    badge.css('color', 'white');
+}
+
+function updateBadge_scrobbling() {
+    var badge = createBadgeIfNecessaryAndGet();
+    badge.text('YTB | Scrobbling');
+    badge.css('color', '#55FF55');
+}
+
+function updateBadge_offline() {
+    var badge = createBadgeIfNecessaryAndGet();
+    badge.text('YTB | Offline');
+    badge.css('color', 'red');
+}
+
+function createBadgeIfNecessaryAndGet() {
+    var videoContainer = $('.html5-video-content');
+    var badge = videoContainer.find('.' + BADGE_CLASS_NAME);
+
+    if (!badge.length) {
+        var outerLink = $('<a></a>')
+            .attr('href', SERVER_URL)
+            .attr('target', '_blank');
+
+        badge = $('<span></span>')
+            .addClass(BADGE_CLASS_NAME)
+            .css({
+                'position': 'absolute',
+                'z-index': 1000,
+                'background-color': 'rgba(0, 0, 0, 0.7)',
+                'font-size': '1.125em',
+                'font-weight': 'bold',
+                'padding': '1px 2px 0px'
+            });
+
+        outerLink.append(badge);
+        videoContainer.append(outerLink);
+    }
+
+    return badge;
 }
