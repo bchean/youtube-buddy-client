@@ -1,4 +1,5 @@
 var SERVER_URL = 'https://youtube-buddy.herokuapp.com';
+var PING_REST_ENDPOINT = SERVER_URL + '/api/pings';
 var BADGE_CLASS_NAME = 'ytb-badge';
 
 function isVideoUrl(currentUrl) {
@@ -34,8 +35,10 @@ function videoIsPlaying() {
 
 function pingServer(currentVideoId) {
     $.ajax({
-        url: makeRestEndpoint(currentVideoId),
-        method: 'PUT'
+        url: PING_REST_ENDPOINT,
+        method: 'POST',
+        contentType: 'application/json',
+        data: makeRequestBody(currentVideoId)
     }).done(function(data) {
         console.log(JSON.stringify(data));
         updateBadge_scrobbling();
@@ -45,8 +48,11 @@ function pingServer(currentVideoId) {
     });
 }
 
-function makeRestEndpoint(currentVideoId) {
-    return SERVER_URL + '/api/videos/' + currentVideoId;
+function makeRequestBody(currentVideoId) {
+    return JSON.stringify({
+        dateTime: new Date(),
+        youtubeId: currentVideoId
+    });
 }
 
 function updateBadge_paused() {
