@@ -7,7 +7,7 @@
     "content_scripts": [
         {
             "matches": ["*://www.youtube.com/*"],
-            "js": ["js/lib/jquery-2.1.4.min.js", "js/content.js"]
+            "js": ["js/lib/jquery-2.1.4.min.js", "js/badge.js", "js/content.js"]
         }
     ],
     "icons": {
