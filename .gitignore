@@ -1,5 +1,10 @@
-# Node modules
-node_modules
+# Node module directories
+node_modules/
 
 # Vim swap files
 *swp
+
+# Assorted Chrome extension files and directories
+build/
+*crx
+*pem
