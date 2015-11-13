@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "del": "^2.0.2",
-    "gulp": "^3.9.0"
+    "gulp": "^3.9.0",
+    "merge-stream": "^1.0.0"
   }
 }
