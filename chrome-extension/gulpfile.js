@@ -1,6 +1,7 @@
 var child_process = require('child_process'),
     del = require('del'),
     gulp = require('gulp'),
+    gutil = require('gulp-util'),
     mergeStreams = require('merge-stream'),
     print = require('gulp-print');
 
@@ -31,18 +32,18 @@ function makeCopyStream(globWithoutDot) {
 gulp.task('crx', ['copy'], function() {
     // Not very gulp-ey... Wonder how we can refactor this.
     var crxCommand = 'bash crxmake.sh ' + BUILD_DIR + ' key.pem ' + EXT_NAME;
-    console.log('$ ' + crxCommand);
-    console.log(child_process.execSync(crxCommand).toString().trim());
+    gutil.log('$ ' + crxCommand);
+    gutil.log(child_process.execSync(crxCommand).toString().trim());
 });
 
 gulp.task('default', ['crx']);
 
 function printPaths(paths) {
-    var output = 'Affected files/directories:';
     if (paths.length) {
-        output += '\n' + paths.join('\n');
+        for (var i = 0; i < paths.length; i++) {
+            gutil.log('Deleting ' + paths[i]);
+        }
     } else {
-        output += ' none!';
+        gutil.log('No files to delete');
     }
-    console.log(output);
 }

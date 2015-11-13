@@ -3,6 +3,7 @@
     "del": "^2.0.2",
     "gulp": "^3.9.0",
     "gulp-print": "^2.0.1",
+    "gulp-util": "^3.0.7",
     "merge-stream": "^1.0.0"
   }
 }
