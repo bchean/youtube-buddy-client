@@ -1,7 +1,8 @@
 var child_process = require('child_process'),
     del = require('del'),
     gulp = require('gulp'),
-    mergeStreams = require('merge-stream');
+    mergeStreams = require('merge-stream'),
+    print = require('gulp-print');
 
 var BUILD_DIR = 'build';
 var EXT_NAME = 'ytb-client';
@@ -15,15 +16,17 @@ gulp.task('clean', function() {
 });
 
 gulp.task('copy', ['clean'], function() {
-    // Would be nice if we could print the files being copied here.
-    var copyImg = gulp.src('img/**')
-        .pipe(gulp.dest(BUILD_DIR + '/img'));
-    var copyJs = gulp.src('js/**')
-        .pipe(gulp.dest(BUILD_DIR + '/js'));
-    var copyManifest = gulp.src('manifest.json')
-        .pipe(gulp.dest(BUILD_DIR));
-    return mergeStreams(copyImg, copyJs, copyManifest);
+    var copyImg = makeCopyStream('img/**');
+    var copyJs = makeCopyStream('js/**');
+    var copyManifest = makeCopyStream('manifest.json');
+    return mergeStreams(copyImg, copyJs, copyManifest)
+        .pipe(print(function(path){return 'Copying to ' + path;}));
 });
+
+function makeCopyStream(globWithoutDot) {
+    return gulp.src('./' + globWithoutDot, {base: '.'})
+        .pipe(gulp.dest(BUILD_DIR));
+}
 
 gulp.task('crx', ['copy'], function() {
     // Not very gulp-ey... Wonder how we can refactor this.
