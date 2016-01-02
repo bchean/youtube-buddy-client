@@ -5,5 +5,8 @@
     "gulp-print": "^2.0.1",
     "gulp-util": "^3.0.7",
     "merge-stream": "^1.0.0"
+  },
+  "devDependencies": {
+    "should": "^8.0.2"
   }
 }

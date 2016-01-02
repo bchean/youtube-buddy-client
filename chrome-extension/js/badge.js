@@ -17,6 +17,11 @@ function getVideoIdFromUrl(currentUrl) {
         currentVideoId = currentUrl.substring(urlIndexOfId);
     }
 
+    var idIndexOfHash = currentVideoId.indexOf('#');
+    if (idIndexOfHash >= 0) {
+        currentVideoId = currentVideoId.substring(0, idIndexOfHash);
+    }
+
     return currentVideoId;
 }
 
@@ -99,3 +104,7 @@ function createBadgeIfNecessaryAndGet() {
 
     return badge;
 }
+
+module.exports = {
+    getVideoIdFromUrl: getVideoIdFromUrl
+};
