@@ -1,7 +1,7 @@
 {
     "name": "YouTube Buddy Client",
     "description": "Chrome extension client for YouTube Buddy. https://github.com/bchean/youtube-buddy-client",
-    "version": "0.1",
+    "version": "0.1.0",
     "manifest_version": 2,
 
     "content_scripts": [

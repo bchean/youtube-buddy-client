@@ -6,5 +6,6 @@ node_modules/
 
 # Assorted Chrome extension files and directories
 build/
+build.zip
 *crx
 *pem

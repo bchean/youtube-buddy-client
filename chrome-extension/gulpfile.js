@@ -7,12 +7,12 @@ var child_process = require('child_process'),
 
 var BUILD_DIR = 'build';
 var EXT_NAME = 'ytb-client';
-var EXT_FILENAME = EXT_NAME + '.crx';
 
 gulp.task('clean', function() {
     return del([
         BUILD_DIR + '/**',
-        EXT_FILENAME
+        BUILD_DIR + '.zip',
+        EXT_NAME + '.crx'
     ]).then(printPaths);
 });
 
@@ -34,6 +34,12 @@ gulp.task('crx', ['copy'], function() {
     var crxCommand = 'bash crxmake.sh ' + BUILD_DIR + ' key.pem ' + EXT_NAME;
     gutil.log('$ ' + crxCommand);
     gutil.log(child_process.execSync(crxCommand).toString().trim());
+});
+
+gulp.task('zip', ['copy'], function() {
+    var zipCommand = 'zip -r ' + BUILD_DIR + ' ' + BUILD_DIR;
+    gutil.log('$ ' + zipCommand);
+    gutil.log(child_process.execSync(zipCommand).toString().trim());
 });
 
 gulp.task('default', ['crx']);
